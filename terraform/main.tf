@@ -6,9 +6,6 @@ provider "aws" {
     region = var.aws_region
 }
 
-resource "aws_amplify_app" "nextjs_app" {
-    name = "my-app-nextjs"
-    repository = "https://github.com/jpalominolau/aws-terraform-template"
-
-    build_spec = file("${path.module}/../amplify.yml")
+resource "aws_s3_bucket" "example" {
+    bucket = "my-aws-terraform-demo-example-jp"
 }
