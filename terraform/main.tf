@@ -11,4 +11,5 @@ resource "aws_amplify_app" "nextjs_app" {
     repository = "https://github.com/jpalominolau/aws-terraform-template"
 
     build_spec = file("${path.module}/../amplify.yml")
+    access_token = var.github_token
 }
