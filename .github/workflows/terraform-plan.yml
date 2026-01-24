@@ -7,8 +7,6 @@ jobs:
   terraform-plan:
     runs-on: ubuntu-latest
     environment: aws-terraform-env
-    outputs:
-      backend_url: ${{ steps.get_backend_url.outputs.backend_url }}
 
     env:
       TF_S3_BUCKET: ${{ secrets.TF_S3_BUCKET }}
@@ -46,8 +44,13 @@ jobs:
         working-directory: terraform
         run: terraform apply -auto-approve
       
-      - name: Get API URL
-        id: get_backend_url
+      - name: Generate .env for frontend
         working-directory: terraform
-        run: echo "backend_url=$(terraform output -raw backend_url)" >> $GITHUB_OUTPUT
+        run: echo "NEXT_PUBLIC_BACKEND_URL=$(terraform output -raw backend_url)" > .env
+
+      - name: Upload .env artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-env
+          path: terraform/.env
 

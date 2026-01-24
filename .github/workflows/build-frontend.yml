@@ -19,14 +19,17 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+      
+      - name: Download .env artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-env
+          path: frontend
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      
-      - name: Generating .env Frontend
-        run: echo "NEXT_PUBLIC_BACKEND_URL=${{ github.event.workflow_run.outputs.backend_url }}" > frontend/.env
 
       - name: Build Frontend
         run: cd frontend && npm ci && npm run build
