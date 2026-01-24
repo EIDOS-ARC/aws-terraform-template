@@ -57,5 +57,4 @@ jobs:
         working-directory: terraform
         with:
           name: frontend-env
-          path: .env
-
+          path: ./env
