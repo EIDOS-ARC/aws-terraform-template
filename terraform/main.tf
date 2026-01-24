@@ -160,5 +160,5 @@ resource "aws_lambda_permission" "backend" {
 }
 
 output "backend_url" {
-  value = "${aws_api_gateway_deployment.backend.invoke_url}/default"
+  value = "https://${aws_api_gateway_rest_api.backend.id}.execute-api.${var.aws_region}.amazonaws.com/default"
 }
