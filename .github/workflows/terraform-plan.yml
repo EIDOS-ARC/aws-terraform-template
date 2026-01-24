@@ -45,12 +45,11 @@ jobs:
         run: terraform apply -auto-approve
       
       - name: Generate .env for frontend
-        working-directory: terraform
         run: |
-          backend_url=$(terraform output -raw backend_url)
-          echo "NEXT_PUBLIC_BACKEND_URL=$backend_url" > .env
+          backend_url=$(terraform -chdir=terraform output -raw backend_url)
+          echo "NEXT_PUBLIC_BACKEND_URL=$backend_url" > terraform/.env
           echo "Contents of .env:"
-          cat .env
+          cat terraform/.env
 
       - name: Upload .env artifact
         uses: actions/upload-artifact@v4
