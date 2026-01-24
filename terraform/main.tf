@@ -140,7 +140,7 @@ resource "aws_apigatewayv2_integration" "backend" {
   api_id             = aws_apigatewayv2_api.backend.id
   integration_type   = "AWS_PROXY"
   integration_uri    = aws_lambda_function.backend.invoke_arn
-  integration_method = "ANY"
+  integration_method = "POST"
 }
 
 resource "aws_apigatewayv2_route" "backend" {
