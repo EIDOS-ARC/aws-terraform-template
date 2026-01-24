@@ -1,4 +1,4 @@
-name: Nextjs Static Build
+name: Expressjs Build
 
 on:
   workflow_run:
@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  build_frontend:
+  build_backend:
     runs-on: ubuntu-latest
     environment: aws-terraform-env
 
@@ -25,10 +25,10 @@ jobs:
         with:
           node-version: 20
           
-      - name: Build Frontend
-        run: cd frontend && npm ci && npm run build
+      - name: Build Backend
+        run: cd backend && npm ci && npm run build && zip -r lambda.zip dist node_modules package.json
       
-      - name: Deploy Frontend
-        run: aws s3 sync frontend/out/ s3://my-nextjs-app-frontend-890/ --delete --region ${{secrets.TF_REGION}}
+      - name: Deploy Backend
+        run: aws lambda update-function-code --function-name backend-api --zip-file fileb://lambda.zip --region ${{ secrets.TF_REGION }}
 
 
