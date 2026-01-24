@@ -50,7 +50,11 @@ jobs:
       
       - name: Generate .env for frontend
         working-directory: terraform
-        run: echo "NEXT_PUBLIC_BACKEND_URL=$(terraform output -raw backend_url)" > .env
+        run: |
+          backend_url=$(terraform output -raw backend_url)
+          echo "NEXT_PUBLIC_BACKEND_URL=$backend_url" > .env
+          echo "Contents of .env:"
+          cat .env
 
       - name: Upload .env artifact
         uses: actions/upload-artifact@v4
