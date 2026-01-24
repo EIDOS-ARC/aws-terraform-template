@@ -7,7 +7,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "frontend" {
-  bucket = "my-nextjs-app-frontend-890"
+  bucket        = "my-nextjs-app-frontend-890"
   force_destroy = true
 }
 
