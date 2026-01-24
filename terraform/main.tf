@@ -112,11 +112,23 @@ resource "aws_iam_role_policy_attachment" "backend" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+data "archive_file" "backend" {
+  type        = "zip"
+  output_path = "lambda.zip"
+
+  source {
+    content  = "console.log('Empty .zip for lambda later replaced');"
+    filename = "index.js"
+  }
+}
+
 resource "aws_lambda_function" "backend" {
-  function_name = "backend-api"
-  role          = aws_iam_role.backend.arn
-  handler       = "dist/app.handler"
-  runtime       = "nodejs20.x"
+  filename         = data.archive_file.backend.output_path
+  source_code_hash = data.archive_file.backend.output_base64sha256
+  function_name    = "backend-api"
+  role             = aws_iam_role.backend.arn
+  handler          = "dist/app.handler"
+  runtime          = "nodejs20.x"
 }
 
 resource "aws_api_gateway_rest_api" "backend" {
