@@ -10,9 +10,6 @@ jobs:
   build_frontend:
     runs-on: ubuntu-latest
     environment: aws-terraform-env
-    outputs:
-      backend_url: ${{ steps.get_backend_url.outputs.backend_url }}
-
 
     env:
       TF_REGION: ${{ secrets.TF_REGION }}
