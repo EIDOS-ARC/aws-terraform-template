@@ -69,6 +69,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Generate .env for frontend
+        run: echo "NEXT_PUBLIC_BACKEND_URL=${BACKEND_URL}" > frontend/.env
+
       - name: Build Frontend
         run: cd frontend && npm ci && npm run build
       
