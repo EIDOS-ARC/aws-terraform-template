@@ -49,7 +49,7 @@ jobs:
         run: echo "NEXT_PUBLIC_BACKEND_URL=$(terraform output -raw backend_url)" > .env
 
       - name: Upload .env artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-env
           path: terraform/.env
