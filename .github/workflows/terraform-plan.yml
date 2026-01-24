@@ -45,12 +45,18 @@ jobs:
         run: terraform apply -auto-approve
       
       - name: Generate .env for frontend
+        working-directory: terraform
         run: |
-          backend_url=$(terraform -chdir=terraform output -raw backend_url)
-          printf "NEXT_PUBLIC_BACKEND_URL=%s\n" "$backend_url" > terraform/.env
+          backend_url=$(terraform output -raw backend_url)
+          echo "NEXT_PUBLIC_BACKEND_URL=$backend_url" > ../frontend/.env
 
-      - name: Upload .env artifact
-        uses: actions/upload-artifact@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          name: frontend-env
-          path: terraform/.env
+          node-version: 20
+          
+      - name: Build Frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
