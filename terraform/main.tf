@@ -35,7 +35,6 @@ resource "aws_cloudfront_distribution" "frontend" {
   origin {
     domain_name = aws_s3_bucket_website_configuration.frontend.website_endpoint
     origin_id   = aws_s3_bucket.frontend.id
-    origin_path = "/"
 
     custom_origin_config {
       http_port              = 80
