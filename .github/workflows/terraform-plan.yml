@@ -47,6 +47,9 @@ jobs:
         id: save_backend_url
         working-directory: terraform
         run: echo "backend_url=$(terraform output -raw backend_url)" >> $GITHUB_OUTPUT
+    
+    outputs:
+      backend_url: ${{ steps.save_backend_url.outputs.backend_url }}
 
   build_frontend:
     needs: terraform-plan
