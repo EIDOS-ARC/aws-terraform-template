@@ -118,7 +118,6 @@ resource "aws_lambda_function" "backend" {
   role             = aws_iam_role.backend.arn
   handler          = "dist/app.handler"
   runtime          = "nodejs20.x"
-  source_code_hash = filebase64sha256("lambda.zip")
 }
 
 resource "aws_api_gateway_rest_api" "backend" {
