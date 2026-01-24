@@ -14,7 +14,6 @@ jobs:
       TF_REGION: ${{ secrets.TF_REGION }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      TF_VAR_github_token: ${{ secrets.TF_GITHUB_TOKEN }}
 
     steps:
       - name: Checkout repo
@@ -25,6 +24,14 @@ jobs:
         with:
           terraform_version: 1.9.8
 
+      - name: Terraform Fmt
+        working-directory: terraform
+        run: terraform fmt -check
+      
+      - name: Terraform Validate
+        working-directory: terraform
+        run: terraform validate
+
       - name: Terraform Init
         working-directory: terraform
         run: terraform init -backend-config="bucket=${TF_S3_BUCKET}" -backend-config="key=${TF_STATE_KEY}" -backend-config="region=${TF_REGION}"
@@ -33,6 +40,14 @@ jobs:
         working-directory: terraform
         run: terraform plan
 
-      - name: Terraform Appl
+      - name: Terraform Apply
         working-directory: terraform
         run: terraform apply -auto-approve
+
+      - name: Build Frontend
+        run: cd frontend && npm ci && npm run build
+      
+      - name: Deploy Frontend
+        run: aws s3 sync frontend/out/ s3://my-nextjs-app-frontend-890/ --delete --acl public-read --region ${{secrets.TF_REGION}}
+
+
