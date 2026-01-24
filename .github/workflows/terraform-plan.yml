@@ -43,3 +43,59 @@ jobs:
       - name: Terraform Apply
         working-directory: terraform
         run: terraform apply -auto-approve
+
+      - name: Save backend URL as output
+        id: save_backend_url
+        working-directory: terraform
+        run: echo "backend_url=$(terraform output -raw backend_url)" >> $GITHUB_OUTPUT
+
+  build_frontend:
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    environment: aws-terraform-env
+
+    env:
+      BACKEND_URL: ${{ needs.terraform-plan.outputs.backend_url }}
+      TF_REGION: ${{ secrets.TF_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build Frontend
+        run: cd frontend && npm ci && npm run build
+      
+      - name: Deploy Frontend
+        run: aws s3 sync frontend/out/ s3://my-nextjs-app-frontend-890/ --delete --region ${{secrets.TF_REGION}}
+  
+  build_backend:
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    environment: aws-terraform-env
+
+    env:
+      TF_REGION: ${{ secrets.TF_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Build Backend
+        run: cd backend && npm ci && npm run build && zip -r lambda.zip dist node_modules package.json
+      
+      - name: Deploy Backend
+        run: aws lambda update-function-code --function-name backend-api --zip-file fileb://backend/lambda.zip --region ${{ secrets.TF_REGION }}
