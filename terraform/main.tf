@@ -113,7 +113,6 @@ resource "aws_iam_role_policy_attachment" "backend" {
 }
 
 resource "aws_lambda_function" "backend" {
-  filename      = "lambda.zip"
   function_name = "backend-api"
   role          = aws_iam_role.backend.arn
   handler       = "dist/app.handler"
