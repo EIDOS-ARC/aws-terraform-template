@@ -19,6 +19,20 @@ resource "aws_s3_bucket_public_access_block" "frontend" {
   restrict_public_buckets = false
 }
 
+resource "aws_s3_bucket_policy" "frontend" {
+  bucket = aws_s3_bucket.frontend.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = "*"
+      Action    = "s3:GetObject"
+      Resources = ["${aws_s3_bucket.frontend.arn}/*"]
+    }]
+  })
+  depends_on = [aws_s3_bucket_public_access_block.frontend]
+}
+
 resource "aws_s3_bucket_website_configuration" "frontend" {
   bucket = aws_s3_bucket.frontend.id
 
@@ -29,6 +43,7 @@ resource "aws_s3_bucket_website_configuration" "frontend" {
   error_document {
     key = "index.html"
   }
+  depends_on = [aws_s3_bucket_policy.frontend]
 }
 
 resource "aws_cloudfront_distribution" "frontend" {
