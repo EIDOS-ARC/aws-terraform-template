@@ -44,6 +44,10 @@ jobs:
         working-directory: terraform
         run: terraform apply -auto-approve
       
+      - name: Show the backend_url
+        working-directory: terraform
+        run: cat terraform output -raw backend_url
+      
       - name: Generate .env for frontend
         working-directory: terraform
         run: echo "NEXT_PUBLIC_BACKEND_URL=$(terraform output -raw backend_url)" > .env
