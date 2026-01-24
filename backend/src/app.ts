@@ -8,6 +8,4 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 export default app;
-export const handler = serverless(app, 
-    { basePath: '/default' }
-);
+export const handler = serverless(app);
