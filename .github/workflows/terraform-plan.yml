@@ -46,7 +46,7 @@ jobs:
       
       - name: Show the backend_url
         working-directory: terraform
-        run: cat terraform output -raw backend_url
+        run: terraform output -raw backend_url
       
       - name: Generate .env for frontend
         working-directory: terraform
