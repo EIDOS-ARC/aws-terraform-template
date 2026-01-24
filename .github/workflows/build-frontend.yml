@@ -30,5 +30,3 @@ jobs:
       
       - name: Deploy Frontend
         run: aws s3 sync frontend/out/ s3://my-nextjs-app-frontend-890/ --delete --region ${{secrets.TF_REGION}}
-
-

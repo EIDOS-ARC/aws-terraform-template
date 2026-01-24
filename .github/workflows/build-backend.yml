@@ -29,6 +29,4 @@ jobs:
         run: cd backend && npm ci && npm run build && zip -r lambda.zip dist node_modules package.json
       
       - name: Deploy Backend
-        run: aws lambda update-function-code --function-name backend-api --zip-file fileb://lambda.zip --region ${{ secrets.TF_REGION }}
-
-
+        run: aws lambda update-function-code --function-name backend-api --zip-file fileb://backend/lambda.zip --region ${{ secrets.TF_REGION }}
