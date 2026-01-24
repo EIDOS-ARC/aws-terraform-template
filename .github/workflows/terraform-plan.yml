@@ -43,11 +43,3 @@ jobs:
       - name: Terraform Apply
         working-directory: terraform
         run: terraform apply -auto-approve
-
-      - name: Build Frontend
-        run: cd frontend && npm ci && npm run build
-      
-      - name: Deploy Frontend
-        run: aws s3 sync frontend/out/ s3://my-nextjs-app-frontend-890/ --delete --region ${{secrets.TF_REGION}}
-
-
