@@ -43,20 +43,3 @@ jobs:
       - name: Terraform Apply
         working-directory: terraform
         run: terraform apply -auto-approve
-      
-      - name: Generate .env for frontend
-        working-directory: terraform
-        run: |
-          backend_url=$(terraform output -raw backend_url)
-          echo "NEXT_PUBLIC_BACKEND_URL=$backend_url" > ../frontend/.env
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          
-      - name: Build Frontend
-        working-directory: frontend
-        run: |
-          npm ci
-          npm run build

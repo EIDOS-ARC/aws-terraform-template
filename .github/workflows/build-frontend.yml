@@ -19,6 +19,14 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build Frontend
+        run: cd frontend && npm ci && npm run build
       
       - name: Deploy Frontend
         run: aws s3 sync frontend/out/ s3://my-nextjs-app-frontend-890/ --delete --region ${{secrets.TF_REGION}}
