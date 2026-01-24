@@ -10,6 +10,9 @@ jobs:
   build_frontend:
     runs-on: ubuntu-latest
     environment: aws-terraform-env
+    outputs:
+      backend_url: ${{ steps.get_backend_url.outputs.backend_url }}
+
 
     env:
       TF_REGION: ${{ secrets.TF_REGION }}
@@ -24,7 +27,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          
+      
+      - name: Generating .env Frontend
+        run: echo "NEXT_PUBLIC_BACKEND_URL=${{ github.event.workflow_run.outputs.backend_url }}" > frontend/.env
+
       - name: Build Frontend
         run: cd frontend && npm ci && npm run build
       

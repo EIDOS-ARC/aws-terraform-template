@@ -7,6 +7,8 @@ jobs:
   terraform-plan:
     runs-on: ubuntu-latest
     environment: aws-terraform-env
+    outputs:
+      backend_url: ${{ steps.get_backend_url.outputs.backend_url }}
 
     env:
       TF_S3_BUCKET: ${{ secrets.TF_S3_BUCKET }}
@@ -43,7 +45,9 @@ jobs:
       - name: Terraform Apply
         working-directory: terraform
         run: terraform apply -auto-approve
-
-      - name: Generating .env Frontend
+      
+      - name: Get API URL
+        id: get_backend_url
         working-directory: terraform
-        run: backend_url=$(terraform output -raw backend_url); echo "NEXT_PUBLIC_BACKEND_URL=$backend_url" > ../frontend/.env
+        run: echo "backend_url=$(terraform output -raw backend_url)" >> $GITHUB_OUTPUT
+
