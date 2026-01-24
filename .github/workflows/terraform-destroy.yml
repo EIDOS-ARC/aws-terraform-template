@@ -11,7 +11,6 @@ jobs:
     env:
       TF_S3_BUCKET: ${{ secrets.TF_S3_BUCKET }}
       TF_STATE_KEY: ${{ secrets.TF_STATE_KEY }}
-      TF_REGION: ${{ secrets.TF_REGION }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -30,7 +29,7 @@ jobs:
         
       - name: Terraform Init
         working-directory: terraform
-        run: terraform init -backend-config="bucket=${TF_S3_BUCKET}" -backend-config="key=${TF_STATE_KEY}" -backend-config="region=${TF_REGION}"
+        run: terraform init -backend-config="bucket=${TF_S3_BUCKET}" -backend-config="key=${TF_STATE_KEY}"
 
       - name: Terraform Validate
         working-directory: terraform

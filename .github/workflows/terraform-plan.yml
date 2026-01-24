@@ -11,7 +11,6 @@ jobs:
     env:
       TF_S3_BUCKET: ${{ secrets.TF_S3_BUCKET }}
       TF_STATE_KEY: ${{ secrets.TF_STATE_KEY }}
-      TF_REGION: ${{ secrets.TF_REGION }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -30,7 +29,7 @@ jobs:
 
       - name: Terraform Init
         working-directory: terraform
-        run: terraform init -backend-config="bucket=${TF_S3_BUCKET}" -backend-config="key=${TF_STATE_KEY}" -backend-config="region=${TF_REGION}"
+        run: terraform init -backend-config="bucket=${TF_S3_BUCKET}" -backend-config="key=${TF_STATE_KEY}"
 
       - name: Terraform Validate
         working-directory: terraform
@@ -56,7 +55,6 @@ jobs:
 
     env:
       BACKEND_URL: ${{ needs.terraform-plan.outputs.backend_url }}
-      TF_REGION: ${{ secrets.TF_REGION }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -76,7 +74,7 @@ jobs:
         run: cd frontend && npm ci && npm run build
       
       - name: Deploy Frontend
-        run: aws s3 sync frontend/out/ s3://my-nextjs-app-frontend-890/ --delete --region ${{secrets.TF_REGION}}
+        run: aws s3 sync frontend/out/ s3://my-nextjs-app-frontend-890/ --delete --region us-east-1
   
   build_backend:
     needs: terraform-plan
@@ -84,7 +82,6 @@ jobs:
     environment: aws-terraform-env
 
     env:
-      TF_REGION: ${{ secrets.TF_REGION }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -101,4 +98,4 @@ jobs:
         run: cd backend && npm ci && npm run build && zip -r lambda.zip dist node_modules package.json
       
       - name: Deploy Backend
-        run: aws lambda update-function-code --function-name backend-api --zip-file fileb://backend/lambda.zip --region ${{ secrets.TF_REGION }}
+        run: aws lambda update-function-code --function-name backend-api --zip-file fileb://backend/lambda.zip --region us-east-1
