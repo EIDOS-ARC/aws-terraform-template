@@ -27,7 +27,7 @@ resource "aws_s3_bucket_policy" "frontend" {
       Effect    = "Allow"
       Principal = "*"
       Action    = "s3:GetObject"
-      Resources = ["${aws_s3_bucket.frontend.arn}/*"]
+      Resource = ["${aws_s3_bucket.frontend.arn}/*"]
     }]
   })
   depends_on = [aws_s3_bucket_public_access_block.frontend]
