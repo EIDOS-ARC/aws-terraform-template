@@ -113,11 +113,11 @@ resource "aws_iam_role_policy_attachment" "backend" {
 }
 
 resource "aws_lambda_function" "backend" {
-  filename         = "lambda.zip"
-  function_name    = "backend-api"
-  role             = aws_iam_role.backend.arn
-  handler          = "dist/app.handler"
-  runtime          = "nodejs20.x"
+  filename      = "lambda.zip"
+  function_name = "backend-api"
+  role          = aws_iam_role.backend.arn
+  handler       = "dist/app.handler"
+  runtime       = "nodejs20.x"
 }
 
 resource "aws_api_gateway_rest_api" "backend" {
