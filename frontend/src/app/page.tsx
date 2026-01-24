@@ -7,16 +7,20 @@ export default function Home() {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   useEffect(() => {
-    fetch(`${backendUrl}/`)
-      .then(res => res.json())
-      .then(data => setMessage(data.message))
-      .catch(err => setMessage('Error fetching backend'));
+    if (backendUrl) {
+      fetch(backendUrl)
+        .then(res => res.json())
+        .then(data => setMessage(data.message))
+        .catch(() => setMessage('Error fetching backend'));
+    } else {
+      setMessage('Backend URL not defined');
+    }
   }, [backendUrl]);
 
   return (
-    <div>
+    <main>
       <h1>Next.js Frontend</h1>
-      <p>Message from backend: {message || 'Loading...'}</p>
-    </div>
+      <p>{message}</p>
+    </main>
   );
 }

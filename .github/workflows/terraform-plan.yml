@@ -44,6 +44,6 @@ jobs:
         working-directory: terraform
         run: terraform apply -auto-approve
 
-      - name: API URL frontend
+      - name: Generating .env Frontend
         working-directory: terraform
         run: backend_url=$(terraform output -raw backend_url); echo "NEXT_PUBLIC_BACKEND_URL=$backend_url" > ../frontend/.env
