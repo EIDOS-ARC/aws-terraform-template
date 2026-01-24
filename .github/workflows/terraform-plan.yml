@@ -48,6 +48,6 @@ jobs:
         run: cd frontend && npm ci && npm run build
       
       - name: Deploy Frontend
-        run: aws s3 sync frontend/.next/ s3://my-nextjs-app-frontend-890/ --delete --acl public-read --region ${{secrets.TF_REGION}}
+        run: aws s3 sync frontend/.next/ s3://my-nextjs-app-frontend-890/ --delete --region ${{secrets.TF_REGION}}
 
 
